@@ -6,4 +6,5 @@ idxs = nearest_index(probe_signal.timestamps(:), trial_times(:, 1));
 vrange = [0, mean(trial_times(:, 2) - trial_times(:, 1)) * freq];
 data = epoch_data(probe_signal.data, idxs, vrange);
 times = 0:(1/freq):(size(data, 2) / freq);
+times = times(:, 1:size(data, 2));
 end
