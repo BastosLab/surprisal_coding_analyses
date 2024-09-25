@@ -1,8 +1,10 @@
-function [trial_times, stim_times] = passiveglo_block_times(nwb, block, intervals_mask)
+function [trial_times, stim_times] = passiveglo_block_times(nwb, intervals_mask)
 %EPOCH_PASSIVEGLO_BLOCK Summary of this function goes here
 %   Detailed explanation goes here
 intervals = nwb.intervals.get('passive_glo').vectordata;
-block_intervals = strcmp(intervals.get('sequence_type').data(:), block);
+block_intervals = strcmp(intervals.get('sequence_type').data(:), 'gloexp');
+block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:), 'rndctl');
+block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:), 'seqctl');
 block_intervals = block_intervals & logical(intervals_mask);
 
 interval_trial_nums = intervals.get('trial_num').data(:);
