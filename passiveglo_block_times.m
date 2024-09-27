@@ -30,7 +30,7 @@ trial_times(:, 1) = nwb.intervals.get('passive_glo').start_time.data(trial_inter
 trial_times(:, 2) = nwb.intervals.get('passive_glo').stop_time.data(trial_intervals(:, 2));
 
 % Don't just store start-end here. Also store oddball_status, orientation,
-% block number (main = 1, seq ctl = 2, rand ctl = 3). Use those to
+% block number (main = 1, rand ctl = 2, seq ctl = 3). Use those to
 % calculate further derived features.
 stim_times = nan(size(stimulus_intervals, 1), 4, 2);
 stim_info = nan(size(stimulus_intervals, 1), 4, 3);
