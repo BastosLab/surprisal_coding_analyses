@@ -1,4 +1,4 @@
-function [trial_times, stim_times, stim_info] = passiveglo_block_times(nwb, intervals_mask)
+function [trial_times, stim_times, stim_info] = passiveglo_block_times(nwb, intervals_mask, stim_probs)
 %EPOCH_PASSIVEGLO_BLOCK
 % trial_times: Trials x 2
 % stim_times: Trials x Stimuli x 2
@@ -33,7 +33,7 @@ trial_times(:, 2) = nwb.intervals.get('passive_glo').stop_time.data(trial_interv
 % block number (main = 1, rand ctl = 2, seq ctl = 3). Use those to
 % calculate further derived features.
 stim_times = nan(size(stimulus_intervals, 1), 4, 2);
-stim_info = nan(size(stimulus_intervals, 1), 4, 3);
+stim_info = nan(size(stimulus_intervals, 1), 4, 4);
 sequence_types = {'gloexp', 'rndctl', 'seqctl'};
 for s = 1:4
     stim_intervals = stimulus_intervals(:, s+1);
@@ -45,6 +45,11 @@ for s = 1:4
     stim_sequence_types = nwb.intervals.get('passive_glo').vectordata.get('sequence_type').data(stim_intervals);
     for seq = 1:numel(stim_sequence_types)
         stim_info(seq, s, 3) = find(strcmp(sequence_types, stim_sequence_types(seq)));
+    end
+    oddball_status = stim_info(:, s, 1) + 1;
+    stim_angles = (stim_info(:, s, 2) == 135) + 1;
+    for t = 1:numel(trial_nums)
+        stim_info(t, s, 4) = -log2(stim_probs(oddball_status(t), stim_angles(t), stim_info(t, s, 3)));
     end
 end
 end
