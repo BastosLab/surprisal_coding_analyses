@@ -2,7 +2,7 @@ function [trial_times, stim_times, stim_info] = passiveglo_block_times(nwb, inte
 %EPOCH_PASSIVEGLO_BLOCK
 % trial_times: Trials x 2
 % stim_times: Trials x Stimuli x 2
-% stim_info: Trials x Stimuli x Features
+% stim_info: Trials x Stimuli x Features ([Oddball, Orientation, Sequence type (block), Surprisal])
 intervals = nwb.intervals.get('passive_glo').vectordata;
 block_intervals = strcmp(intervals.get('sequence_type').data(:), 'gloexp');
 block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:), 'rndctl');
