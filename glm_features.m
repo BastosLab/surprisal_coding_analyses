@@ -8,6 +8,6 @@ trials(:, 2) = trials(:, 2) + offset;
 pupils = time_zscore(epoch_signal(nwb, 'pupil', trials));
 [muae_zs, times_in_trial, stims_in_trial] = passiveglo_muae(nwb, trials, stims, baseline);
 [stim_muae_zs, predictors] = glm_features_in_trial(muae_zs, pupils, times_in_trial, stims_in_trial);
-stim_info = cat(3, stims, stim_info);
+predictors(:, :, :, 1) = predictors(:, :, :, 1) + repmat(permute(stims(:, :, 1), [2, 3, 1, 4]), [1, size(predictors, 2), 1]);
 predictors = cat(4, predictors, repmat(permute(stim_info, [2, 4, 1, 3]), [1, size(predictors, 2), 1, 1]));
 end
