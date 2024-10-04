@@ -17,5 +17,5 @@ for t=1:size(oddball_predictors, 1)
     temporal_predictors{s} = cat(2, ones(size(muae_zs, 2), 1), squeeze(oddball_predictors(t, :, :)));
 end
 
-[beta,Sigma,E,CovB,logL] = mvregress(temporal_predictors, muae_zs);
+[beta,Sigma,E,CovB,logL] = mvregress(temporal_predictors, muae_zs, 'algorithm', 'cwls');
 end
