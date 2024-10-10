@@ -48,7 +48,18 @@ for s = 1:4
     stim_times(:, s, 1) = nwb.intervals.get('passive_glo').start_time.data(stim_intervals);
     stim_times(:, s, 2) = nwb.intervals.get('passive_glo').stop_time.data(stim_intervals);
 
-    stim_info(:, s, 1) = intervals.get('oddball_status').data(stim_intervals);
+    if intervals.isKey('oddball_status')
+        stim_info(:, s, 1) = intervals.get('oddball_status').data(stim_intervals);
+    else
+        if s ~= 4
+            stim_info(:, s, 1) = zeros(size(stim_info(:, s, 1)));
+        else
+            is_glo = strcmp(intervals.get('sequence_type').data(stim_intervals), 'gloexp');
+            is_a = intervals.get('orientation').data(stim_intervals) == 45;
+            is_b = intervals.get('orientation').data(stim_intervals) == 135;
+            stim_info(:, s, 1) = int32(is_glo & is_b) + (int32(is_glo & is_a) * 2);
+        end
+    end
     stim_info(:, s, 2) = intervals.get('orientation').data(stim_intervals);
     stim_sequence_types = intervals.get('sequence_type').data(stim_intervals);
     for seq = 1:numel(stim_sequence_types)
