@@ -1,8 +1,8 @@
-function [stim_muae_zs, predictors] = glm_features(nwb, intervals_mask, baseline, offset, stim_probs)
+function [stim_muae_zs, predictors] = glm_features(nwb, baseline, offset, stim_probs)
 %GLM_FEATURES
 %stim_muae_zs: Stimuli x Samples in Time x Trials
 %predictors: Stimuli x Samples in Time x Trials x Features
-[trials, stims, stim_info] = passiveglo_block_times(nwb, intervals_mask, stim_probs);
+[trials, stims, stim_info] = passiveglo_block_times(nwb, stim_probs);
 trials(:, 1) = trials(:, 1) - offset;
 trials(:, 2) = trials(:, 2) + offset;
 pupils = time_zscore(epoch_signal(nwb, 'pupil', trials));
