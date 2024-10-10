@@ -2,6 +2,9 @@ function [stim_muae_zs, predictors] = glm_features(nwb, baseline, offset, stim_p
 %GLM_FEATURES
 %stim_muae_zs: Stimuli x Samples in Time x Trials
 %predictors: Stimuli x Samples in Time x Trials x Features
+% Features = [Time in session, Pupil z-score, Trial, Stimulus Count/Index,
+%             Oddball, Orientation, Sequence type (block),
+%             Conditional Surprisal, Marginal Surprisal];
 [trials, stims, stim_info] = passiveglo_block_times(nwb, stim_probs);
 trials(:, 1) = trials(:, 1) - offset;
 trials(:, 2) = trials(:, 2) + offset;
