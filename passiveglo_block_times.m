@@ -1,7 +1,9 @@
 function [stim_times, stim_info] = passiveglo_block_times(nwb, stim_probs)
 %EPOCH_PASSIVEGLO_BLOCK
 % stim_times: Trials x Stimuli x 2
-% stim_info: Trials x Stimuli x Features ([Oddball, Orientation, Sequence type (block), Conditional Surprisal, Marginal Surprisal])
+% stim_info: Trials x Stimuli x Features ([Oddball, Orientation,
+% Sequence type (block), Conditional Surprisal, Marginal Surprisal,
+% Cumulative Conditional Surprisal, Cumulative Marginal Surprisal])
 intervals = nwb.intervals.get('passive_glo').vectordata;
 count_a = cumsum(intervals.get('orientation').data(:) == 45);
 count_b = cumsum(intervals.get('orientation').data(:) == 135);
