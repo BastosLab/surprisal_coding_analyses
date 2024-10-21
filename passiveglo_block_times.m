@@ -73,4 +73,5 @@ for s = 1:4
         stim_info(t, s, 5) = -log2(stim_marginals(t, stim_angles(t)));
     end
 end
+stim_info = cat(3, stim_info, cumsum(stim_info(:, :, 4:5), 2));
 end
