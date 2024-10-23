@@ -12,5 +12,6 @@ xticklabels({'Y-intercept', 'Time in session', 'Pupil width', 'Trial', ...
     'Block type', 'Conditional Surprisal', 'Marginal Surprisal', ...
     'Cumulative Conditional Surprisal', 'Cumulative Marginal Surprisal'});
 hold off;
+title("Longitudinal regression coefficients (\beta) with 99% confidence intervals");
 end
 
