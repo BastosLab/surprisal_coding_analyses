@@ -1,4 +1,4 @@
-function [stim_muae_zs,predictors] = load_area_sessions(sessions_path, probe)
+function [stim_muae_zs,predictors] = load_area_sessions(sessions_path)
 %LOAD_AREA_SESSIONS Summary of this function goes here
 %   Detailed explanation goes here
 sessions = load(sessions_path, 'SESSIONS');
@@ -10,6 +10,8 @@ for s=1:size(sessions, 1)
     stim_probs = load(sessions{s, 2}, 'stim_probs');
     stim_probs = stim_probs.stim_probs;
 
+    areas = unique(nwb.general_extracellular_ephys_electrodes.vectordata.get("location").data(:));
+    probe = find(areas == sessions{s, 3}) - 1;
     [smz, ps] = glm_features(nwb, 0.5, 0.5, stim_probs, probe);
     if isnan(stim_muae_zs)
         stim_muae_zs = smz;
