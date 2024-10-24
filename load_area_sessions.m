@@ -1,4 +1,4 @@
-function [stim_muae,predictors] = load_area_sessions(sessions_path)
+function [muae,predictors] = load_area_sessions(sessions_path)
 %LOAD_AREA_SESSIONS Summary of this function goes here
 %   Detailed explanation goes here
 sessions = load(sessions_path, 'SESSIONS');
@@ -20,9 +20,10 @@ trial_times(:, 2) = trial_times(:, 2) + 0.5;
 dts = trial_times(:, 2) - trial_times(:, 1);
 trial_length = mean(dts);
 edge_smoothing = std(dts);
+[trial_length, edge_smoothing]
 clear trial_times;
 
-stim_muae = nan;
+muae = nan;
 predictors = nan;
 for s=1:size(sessions, 1)
     nwb = nwbRead(sessions{s, 1}, 'ignorecache');
@@ -35,12 +36,12 @@ for s=1:size(sessions, 1)
     areas = unique(nwb.general_extracellular_ephys_electrodes.vectordata.get("location").data(:));
     probe = find(areas == sessions{s, 3}) - 1;
     [smz, ps] = glm_features(nwb, trials, edge_smoothing, stim_probs, probe);
-    if isnan(stim_muae)
-        stim_muae = smz;
+    if isnan(muae)
+        muae = smz;
         predictors = ps;
     else
-        stim_muae = cat(3, stim_muae, smz);
-        predictors = cat(3, predictors, ps);
+        muae = cat(2, muae, smz);
+        predictors = cat(2, predictors, ps);
     end
 end
 end

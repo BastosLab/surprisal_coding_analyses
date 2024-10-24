@@ -7,6 +7,6 @@ function [muae, times_in_trial, stims_in_trial] = passiveglo_muae(nwb, trials, s
 stims_in_trial = epoch_stimtimes(trials, stims);
 probe_data = nwb.acquisition.get(['probe_', int2str(p), '_muae']).electricalseries.get(['probe_', int2str(p), '_muae_data']);
 [muae, times_in_trial] = epoch_from_times(probe_data, trials, smoothing);
-
+muae = squeeze(mean(muae, 1));
 end
 
