@@ -20,6 +20,7 @@ trial_times(:, 2) = trial_times(:, 2) + 0.5;
 dts = trial_times(:, 2) - trial_times(:, 1);
 trial_length = mean(dts);
 edge_smoothing = std(dts);
+[trial_length, edge_smoothing]
 clear trial_times;
 
 muae = nan;
