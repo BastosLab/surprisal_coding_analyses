@@ -1,4 +1,4 @@
-function [] = plot_coefficients(betas,std_devs)
+function [] = plot_coefficients(betas,std_devs, area)
 %PLOT_COEFFICIENTS Summary of this function goes here
 %   Detailed explanation goes here
 xs = 1:size(betas, 1);
@@ -12,6 +12,6 @@ xticklabels({'Y-intercept', 'Time in session', 'Pupil width', 'Trial', ...
     'Block type', 'Conditional Surprisal', 'Marginal Surprisal', ...
     'Cumulative Conditional Surprisal', 'Cumulative Marginal Surprisal'});
 hold off;
-title("Longitudinal regression coefficients (\beta) with 99% confidence intervals");
+title(strcat("Longitudinal regression coefficients (\beta) with 99% confidence intervals (", area, ")"));
 end
 
