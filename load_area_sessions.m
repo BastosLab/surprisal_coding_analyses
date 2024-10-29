@@ -13,6 +13,13 @@ for s=1:size(sessions, 1)
     else
         trial_times = cat(1, trial_times, session_trial_times);
     end
+
+    dts = trial_times(:, 2) - trial_times(:, 1);
+    trial_length = mean(dts);
+    trial_length_sd = std(dts);
+    sessions{s, 1}
+    [trial_length, trial_length_sd]
+
     clear nwb;
 end
 trial_times(:, 1) = trial_times(:, 1) - 0.5;
