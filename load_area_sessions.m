@@ -41,7 +41,7 @@ for s=1:size(sessions, 1)
     [trials] = passiveglo_trial_times(nwb, trial_intervals);
     trials(:, 2) = trials(:, 1) + trial_length;
     areas = unique(nwb.general_extracellular_ephys_electrodes.vectordata.get("location").data(:));
-    probe = find(areas == sessions{s, 3}) - 1;
+    probe = find(contains(areas, sessions{s, 3})) - 1;
     [smz, ps] = glm_features(nwb, trials, edge_smoothing, stim_probs, probe);
     if isnan(muae)
         muae = smz;
