@@ -1,6 +1,8 @@
 function [] = plot_coefficients(betas,std_devs, area)
 %PLOT_COEFFICIENTS Summary of this function goes here
 %   Detailed explanation goes here
+betas = betas(2:end);
+std_devs = std_devs(2:end);
 xs = 1:size(betas, 1);
 bar(xs, betas);
 hold on;
