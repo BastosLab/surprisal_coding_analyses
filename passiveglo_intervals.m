@@ -20,7 +20,7 @@ for t = 1:numel(trial_nums)
     trial_intervals(t, 2) = find(interval_trial_nums == trial, 1, 'last');
 
     for s = 1:5
-        stimulus_intervals(t, s) = find(interval_trial_nums == trial & interval_stimulus_nums == s);
+        stimulus_intervals(t, s) = find(interval_trial_nums == trial & interval_stimulus_nums == s, 1, 'first');
     end
 end
 end
