@@ -43,6 +43,8 @@ for s=1:size(sessions, 1)
     areas = unique(nwb.general_extracellular_ephys_electrodes.vectordata.get("location").data(:));
     probe = find(contains(areas, sessions{s, 3})) - 1;
     [smz, ps] = glm_features(nwb, trials, edge_smoothing, stim_probs, probe);
+    ps = cat(3, ps, repmat(permute(s, [3, 1, 2]), [size(ps, 1), size(ps, 2), 1]));
+
     if isnan(muae)
         muae = smz;
         predictors = ps;
