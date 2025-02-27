@@ -1,4 +1,4 @@
-function [stimulus_intervals,trial_intervals] = passiveglo_intervals(nwb)
+function [trial_nums,stimulus_intervals,trial_intervals] = passiveglo_intervals(nwb)
 %PASSIVEGLO_INTERVALS Summary of this function goes here
 %   Detailed explanation goes here
 intervals = nwb.intervals.get('passive_glo').vectordata;
@@ -9,7 +9,15 @@ block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:
 block_intervals = block_intervals & logical(correct_intervals);
 
 interval_trial_nums = intervals.get('trial_num').data(:);
-interval_stimulus_nums = intervals.get('stimulus_number').data(:);
+if ismember('stimulus_number', intervals.keys)
+    interval_stimulus_nums = intervals.get('stimulus_number').data(:);
+else
+    events = intervals.get('event_code_type').data(:);
+    EVENT_TYPES = dictionary([{'fix cue appearance'}, {'presentation 1'}, ...
+        {'presentation 2'}, {'presentation 3'}, {'presentation 4'}, ...
+        {'reward'}], [1:6]);
+    interval_stimulus_nums = EVENT_TYPES(events);
+end
 trial_nums = unique(interval_trial_nums(block_intervals));
 
 trial_intervals = nan(numel(trial_nums), 2);
