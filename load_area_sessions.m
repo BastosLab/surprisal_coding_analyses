@@ -44,6 +44,9 @@ for s=1:size(sessions, 1)
     probe = find(contains(areas, sessions{s, 3})) - 1;
     [smz, ps] = glm_features(nwb, trials, edge_smoothing, stim_probs, probe);
     ps = cat(3, ps, repmat(permute(s, [3, 1, 2]), [size(ps, 1), size(ps, 2), 1]));
+    % ar1s = zeros(size(smz, 1), size(smz, 2), 1);
+    % ar1s(2:end, :) = smz(1:end-1, :);
+    % ps = cat(3, ps, ar1s);
 
     if isnan(muae)
         muae = smz;

@@ -1,4 +1,4 @@
-function [stim_times, stim_info] = passiveglo_block_times(nwb, stim_probs)
+function [trial_nums,stim_times, stim_info] = passiveglo_block_times(nwb, stim_probs)
 %EPOCH_PASSIVEGLO_BLOCK
 % stim_times: Trials x Stimuli x 2
 % stim_info: Trials x Stimuli x Features ([Oddball, Orientation,
@@ -12,18 +12,23 @@ marginalA = count_a ./ ((1:size(count_a, 1))' - count_nan);
 marginalB = count_b ./ ((1:size(count_b, 1))' - count_nan);
 marginals = cat(2, marginalA, marginalB);
 
-[stimulus_intervals, trial_intervals] = passiveglo_intervals(nwb);
+[trial_nums,stimulus_intervals, trial_intervals] = passiveglo_intervals(nwb);
 
 % Don't just store start-end here. Also store oddball_status, orientation,
 % block number (main = 1, rand ctl = 2, seq ctl = 3). Use those to
 % calculate further derived features.
-stim_times = nan(size(stimulus_intervals, 1), 4, 2);
+stim_times = nan(size(stimulus_intervals, 1), 5, 2);
 stim_info = nan(size(stimulus_intervals, 1), 4, 5);
 sequence_types = {'gloexp', 'rndctl', 'seqctl'};
+
+stim_intervals = stimulus_intervals(:, 1);
+stim_times(:, 1, 1) = nwb.intervals.get('passive_glo').start_time.data(stim_intervals);
+stim_times(:, 1, 2) = nwb.intervals.get('passive_glo').stop_time.data(stim_intervals);
+
 for s = 1:4
     stim_intervals = stimulus_intervals(:, s+1);
-    stim_times(:, s, 1) = nwb.intervals.get('passive_glo').start_time.data(stim_intervals);
-    stim_times(:, s, 2) = nwb.intervals.get('passive_glo').stop_time.data(stim_intervals);
+    stim_times(:, s+1, 1) = nwb.intervals.get('passive_glo').start_time.data(stim_intervals);
+    stim_times(:, s+1, 2) = nwb.intervals.get('passive_glo').stop_time.data(stim_intervals);
 
     if intervals.isKey('oddball_status')
         stim_info(:, s, 1) = intervals.get('oddball_status').data(stim_intervals);
