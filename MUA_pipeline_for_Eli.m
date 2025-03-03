@@ -44,7 +44,7 @@ for sess = [1:size(fs, 1)]
     %get probe names and areas
     ProbeNames = unique(nwb.general_extracellular_ephys_electrodes.vectordata.get('probe').data(:));
     numProbes = length(ProbeNames);
-    %get info  
+    %get info
     
     for p = 1:numProbes
         curr_probe_indx = contains(ProbeInfo.session,fs(sess).name) & contains(ProbeInfo.probe,ProbeNames{p});
@@ -57,9 +57,11 @@ for sess = [1:size(fs, 1)]
         times = 0:(1/freq):(size(muae, 2) / freq);
         times = times(:, 1:size(muae, 2));
 
-        baseline_starts = nearest_index(times, datastruct.stim_times(:, 1, 1));
-        baseline_ends = nearest_index(times, datastruct.stim_times(:, 1, 2));
-        muae = baseline_zscore(muae, baseline_starts, baseline_ends);
+        baseline_starts = nearest_index(times, datastruct.stim_times(:, 2, 1) - 0.250);
+        baseline_ends = nearest_index(times, datastruct.stim_times(:, 2, 1) -  0.050);
+        muae = baseline_normalize(muae, baseline_starts, baseline_ends);
+        % Quick and dirty smoothing, based on Andre's recommendations.
+        muae = smoothdata(muae, 2, "movmean", 50);
         responsive = stimulus_responsive_channels(muae, times, datastruct.stim_times);
 
         for a = 1:length(datastruct.areas)
