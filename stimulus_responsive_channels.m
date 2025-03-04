@@ -2,8 +2,8 @@ function [chans] = stimulus_responsive_channels(muae,times,stim_times)
 %STIMULUS_RESPONSIVE_CHANNELS Summary of this function goes here
 % Compare time-averages of the 50-250ms after the onset of stim 1 with that
 % of 200ms in baseline via a Wilcoxon rank-sum test.
-baseline_start = nearest_index(times, stim_times(:, 1, 1));
-baseline_end = nearest_index(times, stim_times(:, 1, 1) + 0.200);
+baseline_start = nearest_index(times, stim_times(:, 2, 1) - 0.250);
+baseline_end = nearest_index(times, stim_times(:, 2, 1) -  0.050);
 
 p1_start = nearest_index(times, stim_times(:, 2, 1) + 0.050);
 p1_end = nearest_index(times, stim_times(:, 2, 1) + 0.250);

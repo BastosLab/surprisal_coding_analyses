@@ -62,12 +62,11 @@ for sess = [1:size(fs, 1)]
         muae = baseline_normalize(muae, baseline_starts, baseline_ends);
         % Quick and dirty smoothing, based on Andre's recommendations.
         muae = smoothdata(muae, 2, "movmean", 50);
-        responsive = stimulus_responsive_channels(muae, times, datastruct.stim_times);
 
         for a = 1:length(datastruct.areas)
             curr_area_indx = contains(ProbeInfo.area(curr_probe_indx), datastruct.areas{a});
             if sum(curr_area_indx) ~= 0
-                chans = curr_area_indx' & responsive;
+                chans = (curr_area_indx & ProbeInfo.chansel_pos(curr_probe_indx))';
                 if sum(chans) > 0
                     datastruct.muae{a} = [datastruct.muae{a};muae(chans,:,:)];
                     datastruct.times_in_trial{a} = times;
