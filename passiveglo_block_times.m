@@ -53,11 +53,10 @@ for s = 1:4
     for t = 1:size(trial_intervals, 1)
         stim_info(t, s, 4) = -log2(stim_probs(oddball_status(t), stim_angles(t), stim_info(t, s, 3)));
         stim_info(t, s, 5) = -log2(stim_marginals(t, stim_angles(t)));
-        if (stim_info(t, s, 3) == 1) && (t < 51)
-            stim_info(t, s, 4) = 0;
-            stim_info(t, s, 5) = 0;
-        end
+        assert(isfinite(stim_info(t, s, 4)));
+        assert(isfinite(stim_info(t, s, 5)));
     end
+    stim_info(1:50, 1:4, 4) = 0;
 end
 stim_info = cat(3, stim_info, cumsum(stim_info(:, :, 4:5), 2));
 end
