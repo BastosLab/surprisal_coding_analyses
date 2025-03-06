@@ -6,6 +6,7 @@ fs = dir('*.nwb');
 
 load('info_with_manual_areas.mat');
 load('glo_stim_probs.mat', 'stim_probs');
+PRESTIM_BASELINE = 4800:5000;
 
 savedir = '/mnt/data/surprisal_coding/epoched';
 mkdir(savedir);
@@ -57,11 +58,12 @@ for sess = [1:size(fs, 1)]
         times = 0:(1/freq):(size(muae, 2) / freq);
         times = times(:, 1:size(muae, 2));
 
-        baseline_starts = nearest_index(times, datastruct.stim_times(:, 2, 1) - 0.250);
-        baseline_ends = nearest_index(times, datastruct.stim_times(:, 2, 1) -  0.050);
+        baseline_starts = repmat(squeeze(PRESTIM_BASELINE(:, 1)), [size(muae, 3), 1]);
+        baseline_ends = repmat(squeeze(PRESTIM_BASELINE(:, end)), [size(muae, 3), 1]);
         muae = baseline_normalize(muae, baseline_starts, baseline_ends);
-        % Quick and dirty smoothing, based on Andre's recommendations.
-        muae = smoothdata(muae, 2, "movmean", 50);
+        % Based on Sophy's exact script
+        krnl = spks_kernel('psp', 10);
+        muae = convn(muae, krnl, 'same');
 
         for a = 1:length(datastruct.areas)
             curr_area_indx = contains(ProbeInfo.area(curr_probe_indx), datastruct.areas{a});
@@ -75,7 +77,7 @@ for sess = [1:size(fs, 1)]
         end
     end
     
-    clearvars -except datastruct fs baseline info ProbeInfo savedir datadir sess stim_probs
+    clearvars -except datastruct fs baseline info ProbeInfo savedir datadir sess stim_probs PRESTIM_BASELINE
     cd(savedir)
     save(sprintf('glo_mua_epoched_%d.mat', sess), 'datastruct', '-v7.3')
     clear datastruct;
