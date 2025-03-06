@@ -101,6 +101,29 @@ for a = 1:size(AREAS_HIERARCHY, 1)
     area = area{1};
 
     nexttile;
+    oddball_muae = cat(3, AreaMuas.(area).lo, AreaMuas.(area).go);
+    area_muae = cat(3, oddball_muae, AreaMuas.(area).rndctrl, AreaMuas.(area).seqctrl);
+    imagesc(squeeze(area_muae)');
+    yline(size(AreaMuas.(area).lo, 3));
+    yline(size(oddball_muae, 3));
+    yline(size(oddball_muae, 3) + size(AreaMuas.(area).rndctrl, 3));
+    for s = 2:size(avg_stim_times, 1)
+        xline(avg_stim_times(s, 1) * 1000, '--g');
+        xline(avg_stim_times(s, 2) * 1000, '--r');
+    end
+    colorbar; clim([-25, 50]);
+    xlabel("Time in trial (milliseconds)"); ylabel("Trial number");
+
+    title(sprintf(['All trials (', area, ', N=%d)'], AreaMuas.(area).num_channels));
+end
+
+figure;
+tiledlayout(size(AREAS_HIERARCHY, 1), 1);
+for a = 1:size(AREAS_HIERARCHY, 1)
+    area = AREAS_HIERARCHY(a);
+    area = area{1};
+
+    nexttile;
     plot(squeeze(mean(AreaMuas.(area).lo, 3)), 'r');
 
     hold on;
