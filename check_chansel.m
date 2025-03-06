@@ -114,6 +114,6 @@ for sess = 1:size(fs,1)
     
 end
 
-
+save('/home/eli/Documents/MATLAB/surprisal_coding_analyses/info_with_manual_areas.mat', 'info');
 
 
