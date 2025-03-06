@@ -56,12 +56,7 @@ for sess = [1:size(fs, 1)]
         if size(datastruct.muae{a}, 1) > 0
             AreaMuas.(area).num_channels = AreaMuas.(area).num_channels + size(datastruct.muae{a}, 1);
             
-            % This data yields a trial-average that hugs zero quite
-            % closely.
             lo_muae = datastruct.muae{a};
-            % This step produces a trial-average that doesn't look properly
-            % baselined.  Should probably just get un-z-scored data by
-            % re-epoching and then z-score it from scratch.
             lo_muae = mean(lo_muae(:, :, los_selected), 1);
             AreaMuas.(area).lo = cat(3, AreaMuas.(area).lo, lo_muae);
 
