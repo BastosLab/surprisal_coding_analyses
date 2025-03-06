@@ -130,7 +130,7 @@ for a = 1:size(AREAS_HIERARCHY, 1)
     plot(squeeze(mean(AreaMuas.(area).go, 3))', 'b');
     for s = 2:size(avg_stim_times, 1)
         xline(avg_stim_times(s, 1) * 1000, '--g');
-        xline(avg_stim_times(s, 2) * 1000, '--r');
+        xline((avg_stim_times(s, 2) + 0.075) * 1000, '--r');
     end
 
     legend('Local oddball', 'Global oddball');
