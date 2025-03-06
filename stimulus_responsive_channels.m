@@ -20,7 +20,8 @@ end
 
 chans = false(size(muae, 1), 1);
 for c = 1:size(muae, 1)
-    [~, chans(c)] = ranksum(p1_avg(c, :), baseline_avg(c, :));
+    [~, h, stat] = ranksum(p1_avg(c, :), baseline_avg(c, :));
+    chans(c) = h & (stat.zval < 0);
 end
 chans = chans';
 end
