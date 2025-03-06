@@ -22,11 +22,14 @@ for a=1:size(RealAreas, 1)
     AreaMuas.(area).num_channels = 0;
     AreaMuas.(area).lo = zeros(1, 7001, 0);
     AreaMuas.(area).go = zeros(1, 7001, 0);
+    AreaMuas.(area).rndctrl = zeros(1, 7001, 0);
+    AreaMuas.(area).seqctrl = zeros(1, 7001, 0);
 end
 
 for sess = [1:size(fs, 1)]
     load(fs(sess).name);
     fs(sess).name
+    datastruct.session
 
     nwb = nwbRead([datadir, datastruct.session]);
     intervals = nwb.intervals.get('passive_glo').vectordata;
@@ -48,6 +51,20 @@ for sess = [1:size(fs, 1)]
         gos_selected(s) = any(go_trials == selected_trials(s));
     end
 
+    rndctl_intervals = logical(intervals.get('rndctl').data(:));
+    rndctl_trials = unique(interval_trial_nums(rndctl_intervals & correct_intervals));
+    rndctl_selected = false(size(selected_trials, 1), 1);
+    for s =1:size(selected_trials, 1)
+        rndctl_selected(s) = any(rndctl_trials == selected_trials(s));
+    end
+
+    seqctl_intervals = logical(intervals.get('seqctl').data(:));
+    seqctl_trials = unique(interval_trial_nums(seqctl_intervals & correct_intervals));
+    seqctl_selected = false(size(selected_trials, 1), 1);
+    for s =1:size(selected_trials, 1)
+        seqctl_selected(s) = any(seqctl_trials == selected_trials(s));
+    end
+
     for a= 1:size(datastruct.areas, 1)
         area = datastruct.areas{a};
         if ~any(strcmp(area, RealAreas))
@@ -55,14 +72,19 @@ for sess = [1:size(fs, 1)]
         end
         if size(datastruct.muae{a}, 1) > 0
             AreaMuas.(area).num_channels = AreaMuas.(area).num_channels + size(datastruct.muae{a}, 1);
+            area_muae = datastruct.muae{a};
             
-            lo_muae = datastruct.muae{a};
-            lo_muae = mean(lo_muae(:, :, los_selected), 1);
+            lo_muae = mean(area_muae(:, :, los_selected), 1);
             AreaMuas.(area).lo = cat(3, AreaMuas.(area).lo, lo_muae);
 
-            go_muae = datastruct.muae{a};
-            go_muae = mean(go_muae(:, :, gos_selected), 1);
+            go_muae = mean(area_muae(:, :, gos_selected), 1);
             AreaMuas.(area).go = cat(3, AreaMuas.(area).go, go_muae);
+
+            rndctl_muae = mean(area_muae(:, :, rndctl_selected), 1);
+            AreaMuas.(area).rndctrl = cat(3, AreaMuas.(area).rndctrl, rndctl_muae);
+
+            seqctl_muae = mean(area_muae(:, :, seqctl_selected), 1);
+            AreaMuas.(area).seqctrl = cat(3, AreaMuas.(area).seqctrl, seqctl_muae);
         end
     end
 
