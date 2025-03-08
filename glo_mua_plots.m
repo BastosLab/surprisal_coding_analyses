@@ -65,6 +65,9 @@ for sess = [1:size(fs, 1)]
         seqctl_selected(s) = any(seqctl_trials == selected_trials(s));
     end
 
+    num_trials = size(go_trials, 1) + size(lo_trials, 1) + size(seqctl_trials, 1) + size(rndctl_trials, 1);
+    num_trials
+
     for a= 1:size(datastruct.areas, 1)
         area = datastruct.areas{a};
         if ~any(strcmp(area, RealAreas))
