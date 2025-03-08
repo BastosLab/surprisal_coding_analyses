@@ -6,7 +6,7 @@ fs = dir('*.nwb');
 
 load('info_with_manual_areas.mat');
 load('glo_stim_probs.mat', 'stim_probs');
-PRESTIM_BASELINE = 4800:5000;
+PRESTIM_BASELINE = 1550:1700;
 
 savedir = '/mnt/data/surprisal_coding/epoched';
 mkdir(savedir);
