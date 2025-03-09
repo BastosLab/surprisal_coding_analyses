@@ -132,7 +132,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([range_min - 1, range_max + 1]);
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
             title(string([area, ', ', 'Habituation']));
 
             nexttile;
@@ -143,7 +143,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([range_min - 1, range_max + 1]);
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
             title(string([area, ', ', 'Local Oddball']));
 
             nexttile;
@@ -154,7 +154,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([range_min - 1, range_max + 1]);
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
             title(string([area, ', ', 'Global Oddball']));
 
             nexttile;
@@ -165,7 +165,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([range_min - 1, range_max + 1]);
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
             title(string([area, ', ', 'Random Control']));
 
             nexttile;
@@ -176,7 +176,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([range_min - 1, range_max + 1]);
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
             title(string([area, ', ', 'Sequence Control']));
         end
     end
