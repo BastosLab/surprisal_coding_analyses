@@ -80,7 +80,7 @@ for sess = [1:size(fs, 1)]
         continue;
     end
     fig = figure;
-    t = tiledlayout(session_area_count, 5);
+    t = tiledlayout(session_area_count, 6);
     title(t, [datastruct.session, ' ', session_type], 'Interpreter', 'none');
 
     for a= 1:size(AREAS_HIERARCHY, 1)
@@ -169,15 +169,30 @@ for sess = [1:size(fs, 1)]
             title(string([area, ', ', 'Random Control']));
 
             nexttile;
-            sems = squeeze(std(presentations.seqctrl, 0, 2)) / size(presentations.seqctrl, 2);
-            bar(["P1", "P2", "P3", "P4"], seqctrl_mus);
+            seqctrl_as = datastruct.stim_info(seqctl_selected, 1, 2) == 45;
+            seqctrl_amus = squeeze(mean(presentations.seqctrl(:, seqctrl_as), 2));
+            sems = squeeze(std(presentations.seqctrl(:, seqctrl_as), 0, 2)) / size(presentations.seqctrl(:, seqctrl_as), 2);
+            bar(["P1", "P2", "P3", "P4"], seqctrl_amus);
             hold on;
-            er = errorbar(1:4, seqctrl_mus, -sems, sems);
+            er = errorbar(1:4, seqctrl_amus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
             ylim([min(range_min * 1.1, 0), range_max * 1.1]);
-            title(string([area, ', ', 'Sequence Control']));
+            title(string([area, ', ', 'Sequence Control (AAAA)']));
+
+            nexttile;
+            seqctrl_bs = datastruct.stim_info(seqctl_selected, 1, 2) == 135;
+            seqctrl_bmus = squeeze(mean(presentations.seqctrl(:, seqctrl_bs), 2));
+            sems = squeeze(std(presentations.seqctrl(:, seqctrl_bs), 0, 2)) / size(presentations.seqctrl(:, seqctrl_bs), 2);
+            bar(["P1", "P2", "P3", "P4"], seqctrl_bmus);
+            hold on;
+            er = errorbar(1:4, seqctrl_bmus, -sems, sems);
+            er.Color = [0 0 0];
+            er.LineStyle = 'none';
+            hold off;
+            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
+            title(string([area, ', ', 'Sequence Control (BBBB)']));
         end
     end
 
