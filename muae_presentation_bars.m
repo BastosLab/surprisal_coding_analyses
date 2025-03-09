@@ -73,7 +73,7 @@ for sess = [1:size(fs, 1)]
         continue;
     end
     fig = figure;
-    t = tiledlayout(session_area_count, 4);
+    t = tiledlayout(session_area_count, 5);
     title(t, datastruct.session, 'Interpreter', 'none');
 
     for a= 1:size(AREAS_HIERARCHY, 1)
@@ -109,12 +109,24 @@ for sess = [1:size(fs, 1)]
                     [1, 2]));
             end
 
-            lo_mus = squeeze(mean(presentations.lo, 2));
+            habit_mus = squeeze(mean(presentations.lo(:, 1:50), 2));
+            lo_mus = squeeze(mean(presentations.lo(:, 51:end), 2));
             go_mus = squeeze(mean(presentations.go, 2));
             rndctrl_mus = squeeze(mean(presentations.rndctrl, 2));
             seqctrl_mus = squeeze(mean(presentations.seqctrl, 2));
             range_max = max(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
             range_min = min(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
+
+            nexttile;
+            sems = squeeze(std(presentations.lo(:, 1:50), 0, 2)) / size(presentations.lo(:, 1:50), 2);
+            bar(["P1", "P2", "P3", "P4"], habit_mus);
+            hold on;
+            er = errorbar(1:4, habit_mus, -sems, sems);
+            er.Color = [0 0 0];
+            er.LineStyle = 'none';
+            hold off;
+            ylim([range_min - 1, range_max + 1]);
+            title(string([area, ', ', 'Habituation']));
 
             nexttile;
             sems = squeeze(std(presentations.lo, 0, 2)) / size(presentations.lo, 2);
