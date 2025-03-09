@@ -109,52 +109,55 @@ for sess = [1:size(fs, 1)]
                     [1, 2]));
             end
 
+            lo_mus = squeeze(mean(presentations.lo, 2));
+            go_mus = squeeze(mean(presentations.go, 2));
+            rndctrl_mus = squeeze(mean(presentations.rndctrl, 2));
+            seqctrl_mus = squeeze(mean(presentations.seqctrl, 2));
+            range_max = max(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
+            range_min = min(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
+
             nexttile;
-            mus = squeeze(mean(presentations.lo, 2));
             sems = squeeze(std(presentations.lo, 0, 2)) / size(presentations.lo, 2);
-            bar(["P1", "P2", "P3", "P4"], mus);
+            bar(["P1", "P2", "P3", "P4"], lo_mus);
             hold on;
-            er = errorbar(1:4, mus, -sems, sems);
+            er = errorbar(1:4, lo_mus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([-5, 10]);
+            ylim([range_min - 1, range_max + 1]);
             title(string([area, ', ', 'Local Oddball']));
 
             nexttile;
-            mus = squeeze(mean(presentations.go, 2));
             sems = squeeze(std(presentations.go, 0, 2)) / size(presentations.go, 2);
-            bar(["P1", "P2", "P3", "P4"], mus);
+            bar(["P1", "P2", "P3", "P4"], go_mus);
             hold on;
-            er = errorbar(1:4, mus, -sems, sems);
+            er = errorbar(1:4, go_mus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([-5, 10]);
+            ylim([range_min - 1, range_max + 1]);
             title(string([area, ', ', 'Global Oddball']));
 
             nexttile;
-            mus = squeeze(mean(presentations.rndctrl, 2));
             sems = squeeze(std(presentations.rndctrl, 0, 2)) / size(presentations.rndctrl, 2);
-            bar(["P1", "P2", "P3", "P4"], mus);
+            bar(["P1", "P2", "P3", "P4"], rndctrl_mus);
             hold on;
-            er = errorbar(1:4, mus, -sems, sems);
+            er = errorbar(1:4, rndctrl_mus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([-5, 10]);
+            ylim([range_min - 1, range_max + 1]);
             title(string([area, ', ', 'Random Control']));
 
             nexttile;
-            mus = squeeze(mean(presentations.seqctrl, 2));
             sems = squeeze(std(presentations.seqctrl, 0, 2)) / size(presentations.seqctrl, 2);
-            bar(["P1", "P2", "P3", "P4"], mus);
+            bar(["P1", "P2", "P3", "P4"], seqctrl_mus);
             hold on;
-            er = errorbar(1:4, mus, -sems, sems);
+            er = errorbar(1:4, seqctrl_mus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([-5, 10]);
+            ylim([range_min - 1, range_max + 1]);
             title(string([area, ', ', 'Sequence Control']));
         end
     end
