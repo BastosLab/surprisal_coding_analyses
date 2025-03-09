@@ -59,6 +59,13 @@ for sess = [1:size(fs, 1)]
         seqctl_selected(s) = any(seqctl_trials == selected_trials(s));
     end
 
+    initial_angles = datastruct.stim_info(los_selected(1:50), 1, 2);
+    if all(initial_angles == 45)
+        session_type = 'AAAB';
+    else
+        session_type = 'BBBA';
+    end
+
     session_area_count = 0;
     for a=1:size(AREAS_HIERARCHY, 1)
         area = AREAS_HIERARCHY{a};
@@ -74,7 +81,7 @@ for sess = [1:size(fs, 1)]
     end
     fig = figure;
     t = tiledlayout(session_area_count, 5);
-    title(t, datastruct.session, 'Interpreter', 'none');
+    title(t, [datastruct.session, ' ', session_type], 'Interpreter', 'none');
 
     for a= 1:size(AREAS_HIERARCHY, 1)
         area = AREAS_HIERARCHY{a};
