@@ -67,8 +67,8 @@ for sess = [1:size(fs, 1)]
     end
 
     session_area_count = 0;
-    for a=1:size(AREAS_HIERARCHY, 1)
-        area = AREAS_HIERARCHY{a};
+    for a=1:size(datastruct.areas, 1)
+        area = datastruct.areas{a};
         if ~any(strcmp(area, RealAreas))
             continue;
         end
@@ -80,11 +80,11 @@ for sess = [1:size(fs, 1)]
         continue;
     end
     fig = figure;
-    t = tiledlayout(session_area_count, 6);
+    t = tiledlayout(session_area_count, 5);
     title(t, [datastruct.session, ' ', session_type], 'Interpreter', 'none');
 
-    for a= 1:size(AREAS_HIERARCHY, 1)
-        area = AREAS_HIERARCHY{a};
+    for a= 1:size(datastruct.areas, 1)
+        area = datastruct.areas{a};
         if ~any(strcmp(area, RealAreas))
             continue;
         end
@@ -120,9 +120,13 @@ for sess = [1:size(fs, 1)]
             lo_mus = squeeze(mean(presentations.lo(:, 51:end), 2));
             go_mus = squeeze(mean(presentations.go, 2));
             rndctrl_mus = squeeze(mean(presentations.rndctrl, 2));
-            seqctrl_mus = squeeze(mean(presentations.seqctrl, 2));
-            range_max = max(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
-            range_min = min(cat(1, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
+            seqctrl_as = datastruct.stim_info(seqctl_selected, 1, 2) == 45;
+            seqctrl_amus = squeeze(mean(presentations.seqctrl(:, seqctrl_as), 2));
+            seqctrl_bs = datastruct.stim_info(seqctl_selected, 1, 2) == 135;
+            seqctrl_bmus = squeeze(mean(presentations.seqctrl(:, seqctrl_bs), 2));
+            seqctrl_mus = cat(1, seqctrl_amus, seqctrl_bmus);
+            range_max = max(cat(1, habit_mus, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
+            range_min = min(cat(1, habit_mus, lo_mus, go_mus, rndctrl_mus, seqctrl_mus)');
 
             nexttile;
             sems = squeeze(std(presentations.lo(:, 1:50), 0, 2)) / size(presentations.lo(:, 1:50), 2);
@@ -132,7 +136,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
+            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
             title(string([area, ', ', 'Habituation']));
 
             nexttile;
@@ -143,7 +147,7 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
+            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
             title(string([area, ', ', 'Local Oddball']));
 
             nexttile;
@@ -154,48 +158,86 @@ for sess = [1:size(fs, 1)]
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
+            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
             title(string([area, ', ', 'Global Oddball']));
 
             nexttile;
-            sems = squeeze(std(presentations.rndctrl, 0, 2)) / size(presentations.rndctrl, 2);
-            bar(["P1", "P2", "P3", "P4"], rndctrl_mus);
+            rndctrl_p1_as = datastruct.stim_info(rndctl_selected, 1, 2) == 45;
+            rndctrl_p1_amus = squeeze(mean(presentations.rndctrl(1, rndctrl_p1_as), 2));
+            rndctrl_p1_asems = squeeze(std(presentations.rndctrl(1, rndctrl_p1_as), 0, 2)) / size(presentations.rndctrl(1, rndctrl_p1_as), 2);
+            rndctrl_p1_bs = datastruct.stim_info(rndctl_selected, 1, 2) == 135;
+            rndctrl_p1_bmus = squeeze(mean(presentations.rndctrl(1, rndctrl_p1_bs), 2));
+            rndctrl_p1_bsems = squeeze(std(presentations.rndctrl(1, rndctrl_p1_bs), 0, 2)) / size(presentations.rndctrl(1, rndctrl_p1_bs), 2);
+
+            rndctrl_p2_as = datastruct.stim_info(rndctl_selected, 2, 2) == 45;
+            rndctrl_p2_amus = squeeze(mean(presentations.rndctrl(2, rndctrl_p2_as), 2));
+            rndctrl_p2_asems = squeeze(std(presentations.rndctrl(2, rndctrl_p2_as), 0, 2)) / size(presentations.rndctrl(2, rndctrl_p2_as), 2);
+            rndctrl_p2_bs = datastruct.stim_info(rndctl_selected, 2, 2) == 135;
+            rndctrl_p2_bmus = squeeze(mean(presentations.rndctrl(2, rndctrl_p2_bs), 2));
+            rndctrl_p2_bsems = squeeze(std(presentations.rndctrl(2, rndctrl_p2_bs), 0, 2)) / size(presentations.rndctrl(2, rndctrl_p2_bs), 2);
+
+            rndctrl_p3_as = datastruct.stim_info(rndctl_selected, 3, 2) == 45;
+            rndctrl_p3_amus = squeeze(mean(presentations.rndctrl(3, rndctrl_p3_as), 2));
+            rndctrl_p3_asems = squeeze(std(presentations.rndctrl(3, rndctrl_p3_as), 0, 2)) / size(presentations.rndctrl(3, rndctrl_p3_as), 2);
+            rndctrl_p3_bs = datastruct.stim_info(rndctl_selected, 3, 2) == 135;
+            rndctrl_p3_bmus = squeeze(mean(presentations.rndctrl(3, rndctrl_p3_bs), 2));
+            rndctrl_p3_bsems = squeeze(std(presentations.rndctrl(3, rndctrl_p3_bs), 0, 2)) / size(presentations.rndctrl(3, rndctrl_p3_bs), 2);
+
+            rndctrl_p4_as = datastruct.stim_info(rndctl_selected, 4, 2) == 45;
+            rndctrl_p4_amus = squeeze(mean(presentations.rndctrl(4, rndctrl_p4_as), 2));
+            rndctrl_p4_asems = squeeze(std(presentations.rndctrl(4, rndctrl_p4_as), 0, 2)) / size(presentations.rndctrl(4, rndctrl_p4_as), 2);
+            rndctrl_p4_bs = datastruct.stim_info(rndctl_selected, 4, 2) == 135;
+            rndctrl_p4_bmus = squeeze(mean(presentations.rndctrl(4, rndctrl_p4_bs), 2));
+            rndctrl_p4_bsems = squeeze(std(presentations.rndctrl(4, rndctrl_p4_bs), 0, 2)) / size(presentations.rndctrl(4, rndctrl_p4_bs), 2);
+
+            rndctrl_mus = cat(1, rndctrl_p1_amus, rndctrl_p1_bmus, rndctrl_p2_amus, rndctrl_p2_bmus, ...
+                    rndctrl_p3_amus, rndctrl_p3_bmus, rndctrl_p4_amus, rndctrl_p4_bmus);
+            rndctrl_sems = cat(1, rndctrl_p1_asems, rndctrl_p1_bsems, rndctrl_p2_asems, rndctrl_p2_bsems, ...
+                rndctrl_p3_asems, rndctrl_p3_bsems, rndctrl_p4_asems, rndctrl_p4_bsems);
+            b = bar(["P1 (A)", "P1 (B)", "P2 (A)", "P2 (B)", "P3 (A)", "P3 (B)", "P4 (A)", "P4 (B)"], ...
+                rndctrl_mus, 'FaceColor','flat');
+            b.CData(2:2:end, :) = repmat([1. 0. 0.], [4, 1]);
             hold on;
-            er = errorbar(1:4, rndctrl_mus, -sems, sems);
+            er = errorbar(1:8, rndctrl_mus, -rndctrl_sems, rndctrl_sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
+            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
             title(string([area, ', ', 'Random Control']));
 
             nexttile;
             seqctrl_as = datastruct.stim_info(seqctl_selected, 1, 2) == 45;
             seqctrl_amus = squeeze(mean(presentations.seqctrl(:, seqctrl_as), 2));
-            sems = squeeze(std(presentations.seqctrl(:, seqctrl_as), 0, 2)) / size(presentations.seqctrl(:, seqctrl_as), 2);
-            bar(["P1", "P2", "P3", "P4"], seqctrl_amus);
-            hold on;
-            er = errorbar(1:4, seqctrl_amus, -sems, sems);
-            er.Color = [0 0 0];
-            er.LineStyle = 'none';
-            hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
-            title(string([area, ', ', 'Sequence Control (AAAA)']));
-
-            nexttile;
             seqctrl_bs = datastruct.stim_info(seqctl_selected, 1, 2) == 135;
             seqctrl_bmus = squeeze(mean(presentations.seqctrl(:, seqctrl_bs), 2));
-            sems = squeeze(std(presentations.seqctrl(:, seqctrl_bs), 0, 2)) / size(presentations.seqctrl(:, seqctrl_bs), 2);
-            bar(["P1", "P2", "P3", "P4"], seqctrl_bmus);
+            seqctrl_mus = cat(1, seqctrl_amus, seqctrl_bmus);
+            asems = squeeze(std(presentations.seqctrl(:, seqctrl_as), 0, 2)) / size(presentations.seqctrl(:, seqctrl_as), 2);
+            bsems = squeeze(std(presentations.seqctrl(:, seqctrl_bs), 0, 2)) / size(presentations.seqctrl(:, seqctrl_bs), 2);
+            sems = cat(1, asems, bsems);
+            b = bar(["P1 (A)", "P1 (B)", "P2 (A)", "P2 (B)", "P3 (A)", "P3 (B)", "P4 (A)", "P4 (B)"], ...
+                seqctrl_mus, 'FaceColor','flat');
+            b.CData(2:2:end, :) = repmat([1. 0. 0.], [4, 1]);
             hold on;
-            er = errorbar(1:4, seqctrl_bmus, -sems, sems);
+            er = errorbar(1:8, seqctrl_mus, -sems, sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
-            ylim([min(range_min * 1.1, 0), range_max * 1.1]);
-            title(string([area, ', ', 'Sequence Control (BBBB)']));
+            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
+            title(string([area, ', ', 'Sequence Control']));
+
+            % nexttile;
+            % bar(["P1", "P2", "P3", "P4"], seqctrl_bmus);
+            % hold on;
+            % er = errorbar(1:4, seqctrl_bmus, -sems, sems);
+            % er.Color = [0 0 0];
+            % er.LineStyle = 'none';
+            % hold off;
+            % ylim([min(range_min * 1.15, 0), range_max * 1.15]);
+            % title(string([area, ', ', 'Sequence Control (BBBB)']));
         end
     end
 
-    exportgraphics(fig, [fs(sess).name, '.pdf']);
+    set(fig, 'Position', [885.75,90,1837.323150796894,1384.5])
+    saveas(fig, [fs(sess).name, '.png']);
     clear nwb;
 end
