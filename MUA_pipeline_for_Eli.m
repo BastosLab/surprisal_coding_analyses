@@ -36,6 +36,19 @@ for sess = [1:size(fs, 1)]
 
     [selected_trials,stim_times, datastruct.stim_info] = passiveglo_block_times(nwb, stim_probs);
     datastruct.stim_times = epoch_to_onset(stim_times, 5, 5.);
+
+    if datastruct.stim_info(1, 1, 2) == 45
+        session_type = 'AAAB';
+        habituation_angles = [45, 45, 45, 135];
+    else
+        session_type = 'BBBA';
+        habituation_angles = [135, 135, 135, 45];
+    end
+    habituation = datastruct.stim_info(1:50, :, 2) == repmat(habituation_angles, [50, 1]);
+    if ~all(all(habituation))
+        fprintf("Session %s has only %d habituation trials!\n", fs(sess).name, sum(all(habituation, 2)));
+    end
+
     % stim_info(:, :, 3) is the block type (1 = main, 2 = rndctrl, 3 =
     % seqctrl)
     
