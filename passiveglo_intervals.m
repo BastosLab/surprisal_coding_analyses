@@ -3,10 +3,6 @@ function [trial_nums,stimulus_intervals,trial_intervals] = passiveglo_intervals(
 %   Detailed explanation goes here
 intervals = nwb.intervals.get('passive_glo').vectordata;
 correct_intervals = intervals.get('correct').data(:);
-block_intervals = strcmp(intervals.get('sequence_type').data(:), 'gloexp');
-block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:), 'rndctl');
-block_intervals = block_intervals | strcmp(intervals.get('sequence_type').data(:), 'seqctl');
-block_intervals = block_intervals & logical(correct_intervals);
 
 interval_trial_nums = intervals.get('trial_num').data(:);
 if ismember('stimulus_number', intervals.keys)
@@ -18,7 +14,7 @@ else
         {'reward'}], [1:6]);
     interval_stimulus_nums = EVENT_TYPES(events);
 end
-trial_nums = unique(interval_trial_nums(block_intervals));
+trial_nums = unique(interval_trial_nums(logical(correct_intervals)));
 
 trial_intervals = nan(numel(trial_nums), 2);
 stimulus_intervals = nan(numel(trial_nums), 5);
