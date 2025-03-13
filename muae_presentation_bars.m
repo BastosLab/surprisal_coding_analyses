@@ -80,7 +80,7 @@ for sess = [1:size(fs, 1)]
         continue;
     end
     fig = figure;
-    t = tiledlayout(session_area_count, 5);
+    t = tiledlayout(session_area_count, 4);
     title(t, [datastruct.session, ' ', session_type], 'Interpreter', 'none');
 
     for a= 1:size(datastruct.areas, 1)
@@ -132,7 +132,7 @@ for sess = [1:size(fs, 1)]
             sems = squeeze(std(presentations.lo(:, 1:50), 0, 2)) / size(presentations.lo(:, 1:50), 2);
             bar(["P1", "P2", "P3", "P4"], habit_mus);
             hold on;
-            er = errorbar(1:4, habit_mus, -sems, sems);
+            er = errorbar(1:4, habit_mus, -2 * sems, 2 * sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
@@ -140,26 +140,27 @@ for sess = [1:size(fs, 1)]
             title(string([area, ', ', 'Habituation']));
 
             nexttile;
-            sems = squeeze(std(presentations.lo, 0, 2)) / size(presentations.lo, 2);
-            bar(["P1", "P2", "P3", "P4"], lo_mus);
-            hold on;
-            er = errorbar(1:4, lo_mus, -sems, sems);
-            er.Color = [0 0 0];
-            er.LineStyle = 'none';
-            hold off;
-            ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
-            title(string([area, ', ', 'Local Oddball']));
+            lo_sems = squeeze(std(presentations.lo, 0, 2)) / size(presentations.lo, 2);
+            go_sems = squeeze(std(presentations.go, 0, 2)) / size(presentations.go, 2);
+            oddball_mus = zeros(size(lo_mus, 1) * 2, 1);
+            oddball_sems = zeros(size(lo_mus, 1) * 2, 1);
+            for p = 1:size(lo_mus, 1)
+                oddball_mus(p*2-1) = lo_mus(p);
+                oddball_mus(p*2) = go_mus(p);
 
-            nexttile;
-            sems = squeeze(std(presentations.go, 0, 2)) / size(presentations.go, 2);
-            bar(["P1", "P2", "P3", "P4"], go_mus);
+                oddball_sems(p*2-1) = lo_sems(p);
+                oddball_sems(p*2) = go_sems(p);
+            end
+            b = bar(["P1 (LO)", "P1 (GO)", "P2 (LO)", "P2 (GO)", "P3 (LO)", ...
+                "P3 (GO)", "P4 (LO)", "P4 (GO)"], oddball_mus, 'FaceColor','flat');
+            b.CData(2:2:end, :) = repmat([1. 0. 0.], [4, 1]);
             hold on;
-            er = errorbar(1:4, go_mus, -sems, sems);
+            er = errorbar(1:8, oddball_mus, -2 * oddball_sems, 2 * oddball_sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
             ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
-            title(string([area, ', ', 'Global Oddball']));
+            title(string([area, ', ', 'Oddball/Main Block']));
 
             nexttile;
             rndctrl_p1_as = datastruct.stim_info(rndctl_selected, 1, 2) == 45;
@@ -218,22 +219,12 @@ for sess = [1:size(fs, 1)]
                 seqctrl_mus, 'FaceColor','flat');
             b.CData(2:2:end, :) = repmat([1. 0. 0.], [4, 1]);
             hold on;
-            er = errorbar(1:8, seqctrl_mus, -sems, sems);
+            er = errorbar(1:8, seqctrl_mus, -2 * sems, 2 * sems);
             er.Color = [0 0 0];
             er.LineStyle = 'none';
             hold off;
             ylim([min(range_min * 1.25, 0), max(range_max * 1.25, 0)]);
             title(string([area, ', ', 'Sequence Control']));
-
-            % nexttile;
-            % bar(["P1", "P2", "P3", "P4"], seqctrl_bmus);
-            % hold on;
-            % er = errorbar(1:4, seqctrl_bmus, -sems, sems);
-            % er.Color = [0 0 0];
-            % er.LineStyle = 'none';
-            % hold off;
-            % ylim([min(range_min * 1.15, 0), range_max * 1.15]);
-            % title(string([area, ', ', 'Sequence Control (BBBB)']));
         end
     end
 
