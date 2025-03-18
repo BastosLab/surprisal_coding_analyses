@@ -38,7 +38,8 @@ presentations. The regressors consist of, in this order:
 * `stim_info(:, p, 2)`: the grating orientation for presentation `p` in degrees
 * `stim_info(:, :, 3)`: an element of {1, 2, 3} for main block, random control block, or sequence control block
 * `stim_info(:, p, 4)`: conditional surprisal (`-log2(Pr(o_p | o_{1:p-1}))`) of presentation `p`. For the block structures the probabilities are:
-  * Main Block: `Pr(o_4 = Local Oddball Stimulus | o_{1:3}) = 0.8`, `Pr(o_4 = Global Oddball Stimulus | o_{1:3}) = 0.2`
+  * Habituation (first 50 trials): `Pr(o_1 = X) = 1.0`, `Pr(o_2 = X) = 1.0`, `Pr(o_3 = X) = 1.0`, `Pr(o_4 = Y) = 1.0`, where XXXY = AAAB for AAAB sessions/mice and XXXY = BBBA for BBBA sessions/mice.
+  * Main Block: `Pr(o_4 = Y | o_{1:3}) = 0.8`, `Pr(o_4 = X | o_{1:3}) = 0.2`, with the other stimuli having `Pr(o_{1,2,3} = X | o_{1:p-1}) = 1`
   * Random Control Block: `Pr(o_p = A | o_{1:p-1}) = 0.5`, `Pr(o_p = B | o_{1:p-1}) = 0.5`
   * Sequence Control Block: `Pr(o_p = A | o_{1:p-1}) = 1.0` for AAAA, `Pr(o_p = B | o_{1:p-1}) = 1.0` for BBBB.
 

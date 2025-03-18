@@ -69,7 +69,8 @@ presentations. The regressors consist of, in this order:</p>
 <li><p><code>stim_info(:, p, 4)</code>: conditional surprisal (<code>-log2(Pr(o_p | o_{1:p-1}))</code>) of presentation <code>p</code>. For the block structures the probabilities are:</p>
 
 <ul>
-<li>Main Block: <code>Pr(o_4 = Local Oddball Stimulus | o_{1:3}) = 0.8</code>, <code>Pr(o_4 = Global Oddball Stimulus | o_{1:3}) = 0.2</code></li>
+<li>Habituation (first 50 trials): <code>Pr(o_1 = X) = 1.0</code>, <code>Pr(o_2 = X) = 1.0</code>, <code>Pr(o_3 = X) = 1.0</code>, <code>Pr(o_4 = Y) = 1.0</code>, where XXXY = AAAB for AAAB sessions/mice and XXXY = BBBA for BBBA sessions/mice.</li>
+<li>Main Block: <code>Pr(o_4 = Y | o_{1:3}) = 0.8</code>, <code>Pr(o_4 = X | o_{1:3}) = 0.2</code>, with the other stimuli having <code>Pr(o_{1,2,3} = X | o_{1:p-1}) = 1</code></li>
 <li>Random Control Block: <code>Pr(o_p = A | o_{1:p-1}) = 0.5</code>, <code>Pr(o_p = B | o_{1:p-1}) = 0.5</code></li>
 <li>Sequence Control Block: <code>Pr(o_p = A | o_{1:p-1}) = 1.0</code> for AAAA, <code>Pr(o_p = B | o_{1:p-1}) = 1.0</code> for BBBB.</li>
 </ul></li>
